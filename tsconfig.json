@@ -2,7 +2,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "rootDir": "src",
-    "outDir": "out"
+    "outDir": "out",
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
