@@ -39,16 +39,19 @@ const client = new Client({
 client.on('ready', async () => {
   console.log('Ready!');
 
+  // Look up voice channel
   const channel = await client.channels.fetch(voiceChannelId) as VoiceChannel;
   if (!channel.isVoice()) {
     throw new Error('Not a voice channel!');
   }
 
+  // Set up voice channel connection
   const connection = joinVoiceChannel({
     channelId: channel.id,
     guildId: channel.guildId,
     adapterCreator: channel.guild.voiceAdapterCreator
   });
+  console.log(`Joined ${channel.name} on guild ${channel.guild.name} (${channel.id})`);
 
   connection.on('stateChange', (o, n) => {
     console.log(`stateChange: ${o.status} -> ${n.status}`);
@@ -56,22 +59,30 @@ client.on('ready', async () => {
   connection.on('error', e => {
     console.error(e);
   });
-
-  console.log(`Joined ${channel.name} on guild ${channel.guild.name} (${channel.id})`);
   
+  // Set up player
   const player = createAudioPlayer({
     behaviors: {
       noSubscriber: NoSubscriberBehavior.Play
     }
   });
 
+  player.on('stateChange', (o, n) => {
+    console.info(`player: ${o.status} -> ${n.status}`);
+  });
   player.on('error', e => {
     console.error(e);
   });
 
+  // Set up stream
   const stream = await httpGet(streamUrl);
-  const resource = createAudioResource(stream);
 
+  stream.on('error', e => {
+    console.error(`Stream error: ${e}`);
+  });
+
+  // Play audio file
+  const resource = createAudioResource(stream);
   console.log(`Playing ${streamUrl}...`);
   player.play(resource);
   connection.subscribe(player);
