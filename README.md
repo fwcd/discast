@@ -1,5 +1,7 @@
 # Discast
 
+[![Build](https://github.com/fwcd/discast/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/discast/actions/workflows/build.yml)
+
 A Discord bot that forwards audio streams to a voice channel.
 
 ## Usage
