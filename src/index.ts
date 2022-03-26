@@ -1,21 +1,12 @@
-import * as process from 'process';
 import { Client, Intents, VoiceChannel } from 'discord.js';
 import { createStreamingPlayer } from './player';
 import { createVoiceConnection } from './connection';
-import { info } from './utils';
+import { env, info } from './utils';
 
-function getEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Please make sure that ${name} is set!`);
-  }
-  return value;
-}
-
-// Read config from env
-const botToken = getEnv('BOT_TOKEN');
-const voiceChannelId = getEnv('VOICE_CHANNEL_ID');
-const streamUrl = getEnv('STREAM_URL');
+// Read config from environment
+const botToken = env('BOT_TOKEN');
+const voiceChannelId = env('VOICE_CHANNEL_ID');
+const streamUrl = env('STREAM_URL');
 
 const client = new Client({
   intents: [
